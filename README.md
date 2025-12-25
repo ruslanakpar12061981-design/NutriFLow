@@ -1,4 +1,2 @@
-Proekt.json - база данных.
-main.py - код бота.
-index.html - мини приложение.
-Также хочу сказать что бот хостился на сайте pythonanywhere https://www.pythonanywhere.com
+Наш сайт-https://nutriflow.tilda.ws/
+Наш бот:http://t.me/Nutri_Flow_Floud_Bot
