@@ -117,7 +117,7 @@ def button_menu():
     btn6 = types.KeyboardButton("Сбросить счётчик калорий 🔄")
 
     web_app_info = types.WebAppInfo(url=WEBAPP_URL)
-    btn7 = types.KeyboardButton("Трекер привычек 📲", web_app=web_app_info)
+    btn7 = types.KeyboardButton("Трекер еды 📲", web_app=web_app_info)
 
     btn8 = types.KeyboardButton("О этом боте")
 
