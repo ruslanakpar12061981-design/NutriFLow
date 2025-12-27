@@ -1,762 +1,364 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Nutri Flow — планировщик привычек</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <title>Nutry Flow — персональный помощник по питанию</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root {
-      --bg: #050816;
-      --card-bg: #0f172a;
-      --accent: #22c55e;
-      --accent-soft: rgba(34, 197, 94, 0.12);
-      --text: #e5e7eb;
-      --text-muted: #9ca3af;
-      --danger: #f97373;
-    }
+    <style>
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+        body{
+            background:#0e1411;
+            color:#e6e6e6;
+        }
 
-    body {
-      background: radial-gradient(circle at top, #1d283a 0, #020617 45%, #000 100%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 16px;
-    }
+        .container{
+            max-width:1200px;
+            margin:auto;
+            padding:60px 20px 80px;
+        }
 
-    .app {
-      width: 100%;
-      max-width: 440px;
-    }
+        header{
+            text-align:center;
+            margin-bottom:80px;
+        }
 
-    .card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
-      border-radius: 18px;
-      padding: 18px 16px 16px;
-      box-shadow:
-        0 18px 40px rgba(15, 23, 42, 0.9),
-        0 0 0 1px rgba(148, 163, 184, 0.12);
-      backdrop-filter: blur(18px);
-    }
+        header h1{
+            font-size:44px;
+            margin-bottom:16px;
+        }
 
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+        header p{
+            font-size:20px;
+            color:#b8c2bb;
+        }
 
-    .bot-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      background: radial-gradient(circle at 30% 20%, #4ade80, #22c55e 35%, #16a34a 70%, #065f46 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
-      position: relative;
-      overflow: hidden;
-    }
+        section{
+            margin-bottom:80px;
+        }
 
-    .bot-avatar::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.35), transparent 55%);
-      mix-blend-mode: screen;
-    }
+        section h2{
+            font-size:30px;
+            margin-bottom:30px;
+        }
 
-    .bot-face {
-      width: 28px;
-      height: 28px;
-      border-radius: 40%;
-      background: #f9fafb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
+        p{
+            font-size:18px;
+            line-height:1.6;
+            color:#d2d8d4;
+        }
 
-    .bot-face::before,
-    .bot-face::after {
-      content: "";
-      position: absolute;
-      top: 40%;
-      width: 5px;
-      height: 5px;
-      border-radius: 999px;
-      background: #0f172a;
-    }
+        .accent{
+            color:#4fd08a;
+            font-weight:600;
+        }
 
-    .bot-face::before { left: 22%; }
-    .bot-face::after { right: 22%; }
+        /* ===== Карточки ===== */
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:30px;
+        }
 
-    .bot-smile {
-      position: absolute;
-      bottom: 22%;
-      width: 14px;
-      height: 7px;
-      border-radius: 0 0 14px 14px;
-      border-bottom: 2px solid #0f172a;
-      border-left: 2px solid transparent;
-      border-right: 2px solid transparent;
-    }
+        .card{
+            background:#161f1b;
+            border-radius:18px;
+            overflow:hidden;
+            box-shadow:0 12px 40px rgba(0,0,0,.5);
+        }
 
-    .header-text h1 {
-      font-size: 18px;
-      font-weight: 650;
-      letter-spacing: 0.02em;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+        .card img{
+            width:100%;
+            height:200px;
+            object-fit:cover;
+            display:block;
+        }
 
-    .header-text h1 span {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--accent);
-    }
+        .card-content{
+            padding:24px;
+        }
 
-    .header-text p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+        .card h3{
+            font-size:20px;
+            margin-bottom:12px;
+            color:#ffffff;
+        }
 
-    .pill-row {
-      display: flex;
-      gap: 6px;
-      margin: 10px 0 4px;
-      flex-wrap: wrap;
-    }
+        /* ===== БЛОГ ===== */
+        .blog-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:36px;
+        }
 
-    .pill {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: var(--text-muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+        .blog-card{
+            background:#161f1b;
+            border-radius:24px;
+            box-shadow:0 18px 45px rgba(0,0,0,.6);
+            padding:18px;
+            display:grid;
+            grid-template-columns:260px 1fr;
+            gap:24px;
+        }
 
-    .pill--accent {
-      border-color: rgba(34, 197, 94, 0.8);
-      background: rgba(34, 197, 94, 0.12);
-      color: var(--accent);
-    }
+        .blog-thumb{
+            height:200px;
+            border-radius:18px;
+            overflow:hidden;
+        }
 
-    .section-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: 12px;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text);
-    }
+        .blog-thumb img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
 
-    .section-title span {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
+        .blog-body{
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            gap:12px;
+        }
 
-    .planner {
-      padding: 10px;
-      border-radius: 14px;
-      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.18), transparent 65%);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-    }
+        .blog-body h3{
+            font-size:24px;
+            color:#fff;
+        }
 
-    .planner-input-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
+        .blog-body p{
+            font-size:18px;
+            color:#c8d4ce;
+        }
 
-    .planner-input {
-      flex: 1;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      padding: 7px 11px;
-      font-size: 12px;
-      background: rgba(15, 23, 42, 0.96);
-      color: var(--text);
-      outline: none;
-    }
+        .blog-btn{
+            margin-top:10px;
+            display:inline-block;
+            background:#ffffff;
+            color:#0e1411;
+            text-decoration:none;
+            border-radius:12px;
+            padding:12px 22px;
+            min-width:180px;
+            font-weight:800;
+            text-align:center;
+            transition:.2s;
+        }
 
-    .planner-input::placeholder {
-      color: rgba(148, 163, 184, 0.8);
-    }
+        .blog-btn:hover{
+            transform:translateY(-2px);
+            opacity:.95;
+        }
 
-    .planner-add-btn {
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 12px;
-      border: none;
-      background: linear-gradient(135deg, #22c55e, #4ade80);
-      color: #052e16;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      box-shadow: 0 8px 18px rgba(34, 197, 94, 0.35);
-    }
+        .blog-bottom{
+            margin-top:44px;
+            display:flex;
+            justify-content:center;
+        }
 
-    .plan-list {
-      max-height: 120px;
-      overflow-y: auto;
-      margin-top: 4px;
-    }
+        .blog-bottom .blog-card{
+            width:min(760px,100%);
+        }
 
-    .plan-empty {
-      font-size: 11px;
-      color: var(--text-muted);
-      padding-top: 2px;
-    }
+        /* ===== SIMPLE TELEGRAM BLOCK (DARK) ===== */
+        .tg-simple{
+            margin:100px auto 60px;
+            background:#0e1411;
+            padding:60px 20px;
+            display:flex;
+            justify-content:center;
+        }
 
-    .plan-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 4px 2px;
-      font-size: 12px;
-      border-radius: 8px;
-    }
+        .tg-simple-inner{
+            max-width:900px;
+            width:100%;
+            display:flex;
+            align-items:center;
+            gap:32px;
+        }
 
-    .plan-item span.title {
-      flex: 1;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
+        .tg-arrow{
+            width:90px;
+            flex-shrink:0;
+        }
 
-    .plan-item button {
-      border-radius: 999px;
-      border: none;
-      font-size: 11px;
-      padding: 2px 7px;
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--danger);
-      border: 1px solid rgba(248, 113, 113, 0.6);
-      cursor: pointer;
-    }
+        .tg-arrow img{
+            width:100%;
+            display:block;
+        }
 
-    .progress-circle-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 10px 0 6px;
-    }
+        .tg-simple-btn{
+            background:#ffffff;
+            color:#000;
+            padding:22px 60px;
+            border-radius:999px;
+            font-size:28px;
+            font-weight:700;
+            text-decoration:none;
+            display:inline-block;
+            box-shadow:0 18px 40px rgba(0,0,0,.5);
+            transition:.25s;
+        }
 
-    .progress-circle {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: conic-gradient(
-        #22c55e 0deg,
-        #22c55e 0deg,
-        rgba(30, 64, 175, 0.7) 0deg,
-        rgba(15, 23, 42, 1) 360deg
-      );
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow:
-        0 0 0 1px rgba(148, 163, 184, 0.3),
-        0 0 20px rgba(34, 197, 94, 0.25);
-      position: relative;
-    }
+        .tg-simple-btn:hover{
+            transform:translateY(-3px);
+        }
 
-    .progress-circle-inner {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: radial-gradient(circle at top, #020617, #020617 55%, #000 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
+        footer{
+            text-align:center;
+            padding:40px 20px;
+            color:#9aa3a0;
+        }
 
-    .progress-percent {
-      font-size: 22px;
-      font-weight: 650;
-    }
+        /* ===== Адаптив ===== */
+        @media(max-width:980px){
+            .blog-grid{
+                grid-template-columns:1fr;
+            }
+            .blog-card{
+                grid-template-columns:1fr;
+            }
+            .blog-thumb{
+                height:220px;
+            }
+        }
 
-    .progress-label {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .habits-list {
-      margin-top: 6px;
-      border-radius: 14px;
-      padding: 8px 10px 6px;
-      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.18), transparent 65%);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      max-height: 190px;
-      overflow-y: auto;
-    }
-
-    .habits-empty {
-      font-size: 11px;
-      color: var(--text-muted);
-      padding-top: 2px;
-    }
-
-    .habit-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 4px;
-      border-radius: 10px;
-      transition: background 0.12s ease, transform 0.08s ease;
-      cursor: pointer;
-    }
-
-    .habit-item:hover {
-      background: rgba(15, 23, 42, 0.88);
-    }
-
-    .habit-item.completed {
-      background: rgba(22, 163, 74, 0.14);
-    }
-
-    .habit-checkbox {
-      width: 20px;
-      height: 20px;
-      border-radius: 7px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .habit-item.completed .habit-checkbox {
-      border-color: #22c55e;
-      background: radial-gradient(circle at top, #4ade80, #16a34a);
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
-    }
-
-    .habit-checkbox span {
-      font-size: 14px;
-      opacity: 0;
-      transform: scale(0.5);
-      transition: opacity 0.1s ease, transform 0.1s ease;
-    }
-
-    .habit-item.completed .habit-checkbox span {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .habit-text-main {
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    .habit-text-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 1px;
-    }
-
-    .motivation {
-      margin-top: 10px;
-      padding: 9px 10px 9px;
-      border-radius: 14px;
-      background: radial-gradient(circle at top left, var(--accent-soft), transparent 65%);
-      border: 1px dashed rgba(34, 197, 94, 0.7);
-      font-size: 12px;
-      line-height: 1.5;
-      color: var(--text-muted);
-    }
-
-    .motivation-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .motivation-title span.badge {
-      font-size: 10px;
-      font-weight: 500;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(34, 197, 94, 0.6);
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--accent);
-    }
-
-    .quick-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .btn {
-      flex: 1;
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 12px;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #22c55e, #4ade80);
-      color: #052e16;
-      font-weight: 600;
-      box-shadow: 0 12px 25px rgba(34, 197, 94, 0.35);
-    }
-
-    .btn-secondary {
-      background: rgba(15, 23, 42, 0.96);
-      color: var(--text-muted);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-    }
-
-    .btn:active {
-      transform: translateY(1px) scale(0.99);
-    }
-
-    .footer-note {
-      margin-top: 9px;
-      text-align: center;
-      font-size: 10px;
-      color: var(--text-muted);
-      opacity: 0.8;
-    }
-  </style>
+        @media(max-width:700px){
+            .tg-simple-inner{
+                flex-direction:column;
+                text-align:center;
+            }
+            .tg-simple-btn{
+                font-size:22px;
+                padding:18px 40px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="app">
-    <div class="card">
-      <div class="header">
-        <div class="bot-avatar">
-          <div class="bot-face">
-            <div class="bot-smile"></div>
-          </div>
+
+<div class="container">
+
+<header>
+    <h1>Nutry Flow</h1>
+    <p>Ваш персональный помощник по правильному питанию</p>
+</header>
+
+<section>
+    <h2>Какова наша основная задача?</h2>
+    <p>
+        Мы помогаем выстроить <span class="accent">удобное и здоровое питание</span>,
+        которое вписывается в реальную жизнь и улучшает самочувствие,
+        внешний вид и уровень энергии.
+    </p>
+</section>
+
+<section>
+    <h2>Что входит в наши услуги?</h2>
+    <div class="grid">
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352">
+            <div class="card-content">
+                <h3>Персональный рацион</h3>
+                <p>Питание под образ жизни и цели.</p>
+            </div>
         </div>
-        <div class="header-text">
-          <h1>Nutri Flow <span>еда на сегодня</span></h1>
-          <p>Сначала спланируй полезную еду, потом отмечай, что съел 💚</p>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1506084868230-bb9d95c24759">
+            <div class="card-content">
+                <h3>Анализ привычек</h3>
+                <p>Поиск точек роста и баланса.</p>
+            </div>
         </div>
-      </div>
 
-      <div class="pill-row">
-        <div class="pill pill--accent">🧩 Планировщик</div>
-      </div>
-
-      <!-- Планировщик привычек -->
-      <div class="section-title">
-        План еды
-        <span>создай свой список</span>
-      </div>
-      <div class="planner">
-        <div class="planner-input-row">
-          <input
-            id="habitInput"
-            class="planner-input"
-            type="text"
-            placeholder="Какую еду едим сегодня?"
-          />
-          <button class="planner-add-btn" id="addHabitBtn">Добавить</button>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c">
+            <div class="card-content">
+                <h3>Материалы и инструкции</h3>
+                <p>Чек-листы и понятные правила.</p>
+            </div>
         </div>
-        <div id="planList" class="plan-list"></div>
-        <div id="planEmpty" class="plan-empty">
-          Пока еды на сегодня нет.
-        </div>
-      </div>
 
-      <!-- Прогресс и чек-лист -->
-      <div class="section-title">
-        Сегодня
-        <span id="dateLabel"></span>
-      </div>
-
-      <div class="progress-circle-wrapper">
-        <div class="progress-circle" id="progressCircle">
-          <div class="progress-circle-inner">
-            <div class="progress-percent" id="progressPercent">0%</div>
-            <div class="progress-label">выполнено</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="habits-list">
-        <div id="habitsEmpty" class="habits-empty">
-          Сначала добавьте еду в планировщике выше 💫
-        </div>
-        <div id="habitsList"></div>
-      </div>
-
-      <div class="motivation">
-        <div class="motivation-title">
-          💬 Мягкая поддержка
-          <span class="badge">без давления</span>
-        </div>
-        <p id="motivationText">
-          Сегодня не обязательно сделать всё. Достаточно честно отметить, что получилось — и продолжать завтра.
-        </p>
-      </div>
-
-      <div class="quick-actions">
-        <button class="btn btn-primary" id="openBotBtn">Открыть бота Nutri Flow</button>
-        <button class="btn btn-secondary" id="tipBtn">Совет 💡</button>
-      </div>
-
-      <div class="footer-note">
-        Еда и галочки хранятся только на этом устройстве (localStorage).<br />
-        Для учёта веса и калорий используйте Telegram-бота <b>@Nutri_Flow_Floud_Bot</b>.
-      </div>
     </div>
-  </div>
+</section>
 
-  <script>
-    const PLAN_KEY = "nutriflow_habits_plan";
-    const STATE_KEY = "nutriflow_habits_state";
+<section>
+    <h2>Блог о здоровом питании</h2>
 
-    const habitInput = document.getElementById("habitInput");
-    const addHabitBtn = document.getElementById("addHabitBtn");
-    const planList = document.getElementById("planList");
-    const planEmpty = document.getElementById("planEmpty");
+    <div class="blog-grid">
 
-    const habitsList = document.getElementById("habitsList");
-    const habitsEmpty = document.getElementById("habitsEmpty");
+        <article class="blog-card">
+            <div class="blog-thumb">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd">
+            </div>
+            <div class="blog-body">
+                <h3>Основы здорового питания</h3>
+                <p>Простые правила, с которых стоит начать.</p>
+                <a href="healthy-basics.html" class="blog-btn">Читать</a>
+            </div>
+        </article>
 
-    const progressCircle = document.getElementById("progressCircle");
-    const progressPercent = document.getElementById("progressPercent");
-    const dateLabel = document.getElementById("dateLabel");
+        <article class="blog-card">
+            <div class="blog-thumb">
+                <img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07">
+            </div>
+            <div class="blog-body">
+                <h3>Планирование рациона</h3>
+                <p>Как составить меню без стресса.</p>
+                <a href="meal-planning.html" class="blog-btn">Читать</a>
+            </div>
+        </article>
 
-    const motivationText = document.getElementById("motivationText");
-    const tipBtn = document.getElementById("tipBtn");
-    const openBotBtn = document.getElementById("openBotBtn");
+    </div>
 
-    const tips = [
-      "Можно начать с одной-двух привычек — это уже много 💚",
-      "Если сегодня что-то не получилось — это опыт, а не провал 🙂",
-      "Отмечать честно, даже если мало — тоже привычка заботы о себе 🌿",
-      "Маленькие шаги каждый день дают больше, чем один идеальный рывок 💪",
-      "Иногда лучшая привычка дня — лечь спать чуть раньше 😴",
-    ];
+    <div class="blog-bottom">
+        <article class="blog-card">
+            <div class="blog-thumb">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c">
+            </div>
+            <div class="blog-body">
+                <h3>Мифы о питании</h3>
+                <p>Развенчиваем популярные заблуждения.</p>
+                <a href="myths.html" class="blog-btn">Читать</a>
+            </div>
+        </article>
+    </div>
 
-    function getTodayKey() {
-      const d = new Date();
-      return d.toISOString().slice(0, 10); // YYYY-MM-DD
-    }
+</section>
 
-    function loadPlan() {
-      try {
-        const raw = localStorage.getItem(PLAN_KEY);
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        if (!Array.isArray(arr)) return [];
-        return arr;
-      } catch (e) {
-        return [];
-      }
-    }
+<!-- ===== SIMPLE TELEGRAM BLOCK ===== -->
+<section class="tg-simple">
+    <div class="tg-simple-inner">
 
-    function savePlan(plan) {
-      localStorage.setItem(PLAN_KEY, JSON.stringify(plan));
-    }
+        <div class="tg-arrow">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_arrow.svg" alt="">
+        </div>
 
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STATE_KEY);
-        if (!raw) return { date: getTodayKey(), completed: {} };
-        const st = JSON.parse(raw);
-        if (st.date !== getTodayKey()) {
-          return { date: getTodayKey(), completed: {} };
-        }
-        return st;
-      } catch (e) {
-        return { date: getTodayKey(), completed: {} };
-      }
-    }
+        <a
+          class="tg-simple-btn"
+          href="https://t.me/Nutri_Flow_Floud_Bot"
+          target="_blank"
+          rel="noopener"
+        >
+          Наш telegram бот
+        </a>
 
-    function saveState(state) {
-      localStorage.setItem(STATE_KEY, JSON.stringify(state));
-    }
+    </div>
+</section>
 
-    function renderPlan() {
-      const plan = loadPlan();
-      planList.innerHTML = "";
+<footer>
+    Nutry Flow © 2025 · Здоровье в балансе
+</footer>
 
-      if (plan.length === 0) {
-        planEmpty.style.display = "block";
-      } else {
-        planEmpty.style.display = "none";
-      }
+</div>
 
-      plan.forEach(habit => {
-        const row = document.createElement("div");
-        row.className = "plan-item";
-
-        const titleSpan = document.createElement("span");
-        titleSpan.className = "title";
-        titleSpan.textContent = habit.title;
-
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "удалить";
-        delBtn.addEventListener("click", () => {
-          const updated = loadPlan().filter(h => h.id !== habit.id);
-          savePlan(updated);
-          const st = loadState();
-          delete st.completed[habit.id];
-          saveState(st);
-          renderPlan();
-          renderToday();
-        });
-
-        row.appendChild(titleSpan);
-        row.appendChild(delBtn);
-        planList.appendChild(row);
-      });
-    }
-
-    function updateProgress(plan, state) {
-      const total = plan.length;
-      const completedCount = total === 0
-        ? 0
-        : plan.filter(h => state.completed[h.id]).length;
-
-      const progress = total === 0 ? 0 : Math.round((completedCount / total) * 100);
-      progressPercent.textContent = progress + "%";
-
-      const angle = (progress / 100) * 360;
-      progressCircle.style.background = `conic-gradient(
-        #22c55e 0deg,
-        #22c55e ${angle}deg,
-        rgba(30, 64, 175, 0.7) ${angle}deg,
-        rgba(15, 23, 42, 1) 360deg
-      )`;
-    }
-
-    function renderToday() {
-      const plan = loadPlan();
-      const state = loadState();
-
-      habitsList.innerHTML = "";
-
-      if (plan.length === 0) {
-        habitsEmpty.style.display = "block";
-      } else {
-        habitsEmpty.style.display = "none";
-      }
-
-      plan.forEach(habit => {
-        const item = document.createElement("div");
-        item.className = "habit-item";
-        item.dataset.id = habit.id;
-
-        const completed = !!state.completed[habit.id];
-        if (completed) item.classList.add("completed");
-
-        const checkbox = document.createElement("div");
-        checkbox.className = "habit-checkbox";
-        const checkMark = document.createElement("span");
-        checkMark.textContent = "✓";
-        checkbox.appendChild(checkMark);
-
-        const textWrap = document.createElement("div");
-        const main = document.createElement("div");
-        main.className = "habit-text-main";
-        main.textContent = habit.title;
-
-        const sub = document.createElement("div");
-        sub.className = "habit-text-sub";
-        sub.textContent = "Отметь, когда выполнишь";
-
-        textWrap.appendChild(main);
-        textWrap.appendChild(sub);
-
-        item.appendChild(checkbox);
-        item.appendChild(textWrap);
-
-        item.addEventListener("click", () => {
-          const st = loadState();
-          const prev = !!st.completed[habit.id];
-          st.completed[habit.id] = !prev;
-          st.date = getTodayKey();
-          saveState(st);
-          renderToday();
-        });
-
-        habitsList.appendChild(item);
-      });
-
-      updateProgress(plan, state);
-    }
-
-    function init() {
-      const today = new Date();
-      dateLabel.textContent = today.toLocaleDateString("ru-RU", {
-        day: "2-digit",
-        month: "short"
-      });
-
-      renderPlan();
-      renderToday();
-
-      addHabitBtn.addEventListener("click", () => {
-        const value = habitInput.value.trim();
-        if (!value) return;
-        const plan = loadPlan();
-        const newHabit = {
-          id: Date.now().toString(),
-          title: value
-        };
-        plan.push(newHabit);
-        savePlan(plan);
-        habitInput.value = "";
-        renderPlan();
-        renderToday();
-      });
-
-      habitInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          addHabitBtn.click();
-        }
-      });
-    }
-
-    tipBtn.addEventListener("click", () => {
-      const random = tips[Math.floor(Math.random() * tips.length)];
-      motivationText.textContent = random;
-    });
-
-    openBotBtn.addEventListener("click", () => {
-      window.open("https://t.me/Nutri_Flow_Floud_Bot", "_blank");
-    });
-
-    init();
-  </script>
 </body>
 </html>

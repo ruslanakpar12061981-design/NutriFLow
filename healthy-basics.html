@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Nutri Flow — Основы здорового питания</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+        }
+
+        body{
+            background:#0e1411;
+            color:#e6e6e6;
+        }
+
+        /* ===== TOP BAR ===== */
+        .topbar{
+            height:68px;
+            background:#1a2a22;
+            display:flex;
+            align-items:center;
+        }
+
+        .topbar-inner{
+            width:1200px;
+            max-width:100%;
+            margin:0 auto;
+            padding:0 22px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .topbar a{
+            color:#e6e6e6;
+            text-decoration:none;
+            font-size:18px;
+            font-weight:600;
+        }
+
+        .brand{
+            font-size:26px;
+            font-weight:700;
+            color:#4fd08a;
+        }
+
+        /* ===== HERO 1 ===== */
+        .hero{
+            min-height:calc(100vh - 68px);
+            position:relative;
+            overflow:hidden;
+        }
+
+        .hero::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:
+              radial-gradient(circle at 20% 70%, rgba(79,208,138,.18), transparent 60%),
+              radial-gradient(circle at 80% 40%, rgba(79,208,138,.14), transparent 60%);
+            opacity:.6;
+        }
+
+        .hero-inner{
+            width:1200px;
+            max-width:100%;
+            margin:0 auto;
+            padding:50px 22px 80px;
+            position:relative;
+            z-index:2;
+        }
+
+        .hero-grid{
+            display:grid;
+            grid-template-columns:1.1fr .9fr;
+            gap:36px;
+            align-items:center;
+        }
+
+        .photo{
+            border-radius:16px;
+            overflow:hidden;
+            box-shadow:0 20px 44px rgba(0,0,0,.55);
+        }
+
+        .photo img{
+            width:100%;
+            height:100%;
+            min-height:420px;
+            object-fit:cover;
+        }
+
+        .title-block{
+            margin-top:20px;
+        }
+
+        .title{
+            font-family:Georgia,serif;
+            font-size:clamp(48px,5vw,86px);
+            line-height:.95;
+            font-weight:700;
+            color:#fff;
+        }
+
+        .subtitle{
+            margin-top:8px;
+            font-size:22px;
+            text-transform:uppercase;
+            letter-spacing:1px;
+            color:#9fdcb8;
+        }
+
+        .tips{
+            background:#16231d;
+            border-radius:36px;
+            padding:32px;
+            box-shadow:0 24px 52px rgba(0,0,0,.65);
+        }
+
+        .tips ul{
+            list-style:none;
+            display:flex;
+            flex-direction:column;
+            gap:24px;
+        }
+
+        .tip{
+            display:grid;
+            grid-template-columns:56px 1fr;
+            gap:18px;
+        }
+
+        .icon{
+            width:52px;
+            height:52px;
+            border-radius:50%;
+            background:#4fd08a;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .icon svg{
+            width:26px;
+            height:26px;
+            fill:#0e1411;
+        }
+
+        .tip b{
+            font-size:26px;
+            font-weight:800;
+            color:#fff;
+        }
+
+        .tip span{
+            display:block;
+            margin-top:6px;
+            font-size:18px;
+            color:#c8d4ce;
+        }
+
+        /* ===== HERO 2 ===== */
+        .basics-detail{
+            position:relative;
+            padding:100px 22px;
+            background:#0e1411;
+            overflow:hidden;
+        }
+
+        .basics-detail::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:
+              radial-gradient(circle at 20% 40%, rgba(79,208,138,.18), transparent 60%),
+              radial-gradient(circle at 80% 70%, rgba(79,208,138,.14), transparent 60%);
+            opacity:.6;
+        }
+
+        .basics-detail-inner{
+            max-width:1200px;
+            margin:0 auto;
+            display:grid;
+            grid-template-columns:1.1fr .9fr;
+            gap:60px;
+            position:relative;
+            z-index:2;
+            align-items:center;
+        }
+
+        .basics-text h3{
+            font-size:32px;
+            margin-bottom:18px;
+            font-weight:800;
+            color:#fff;
+        }
+
+        .basics-text h4{
+            font-size:28px;
+            margin:36px 0 14px;
+            color:#4fd08a;
+            font-weight:800;
+        }
+
+        .basics-text p{
+            font-size:18px;
+            line-height:1.65;
+            color:#cfd6d1;
+            margin-bottom:18px;
+            max-width:560px;
+        }
+
+        .basics-images{
+            position:relative;
+            min-height:520px;
+        }
+
+        .circle{
+            position:absolute;
+            border-radius:50%;
+            overflow:hidden;
+            box-shadow:0 20px 40px rgba(0,0,0,.55);
+        }
+
+        .circle img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+        .c1{ width:190px; height:190px; top:0; left:40px; }
+        .c2{ width:120px; height:120px; top:40px; right:40px; }
+        .c3{ width:160px; height:160px; bottom:60px; left:0; }
+        .c4{ width:260px; height:260px; bottom:0; right:0; }
+
+        /* ===== ADAPTIVE ===== */
+        @media(max-width:980px){
+            .hero-grid,
+            .basics-detail-inner{
+                grid-template-columns:1fr;
+            }
+            .title-block{
+                text-align:center;
+            }
+        }
+
+        @media(max-width:560px){
+            .photo img{ min-height:300px; }
+            .tip b{ font-size:22px; }
+            .tip span{ font-size:16px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="topbar-inner">
+        <a href="index.html">Главная</a>
+        <div class="brand">Nutri Flow</div>
+        <div style="width:80px"></div>
+    </div>
+</div>
+
+<!-- HERO 1 -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-grid">
+
+            <div>
+                <div class="photo">
+                    <img src="https://avatars.mds.yandex.net/i?id=1d03998a3c20cacad3ae0bf21b50e85a36bdcab2-16479758-images-thumbs&n=13" alt="Основы питания">
+                </div>
+
+                <div class="title-block">
+                    <div class="title">Правила</div>
+                    <div class="subtitle">питания</div>
+                </div>
+            </div>
+
+            <aside class="tips">
+                <ul>
+                    <li class="tip">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24"><path d="M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm11 3-6-6a10 10 0 1 0-2 2l6 6 2-2Z"/></svg>
+                        </div>
+                        <div>
+                            <b>Ешьте регулярно и не переедайте.</b>
+                            <span>3–4 приёма пищи в день поддерживают энергию.</span>
+                        </div>
+                    </li>
+
+                    <li class="tip">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24"><path d="M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm11 3-6-6a10 10 0 1 0-2 2l6 6 2-2Z"/></svg>
+                        </div>
+                        <div>
+                            <b>Добавляйте овощи, фрукты и воду.</b>
+                            <span>Клетчатка и вода важны для баланса.</span>
+                        </div>
+                    </li>
+
+                    <li class="tip">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24"><path d="M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm11 3-6-6a10 10 0 1 0-2 2l6 6 2-2Z"/></svg>
+                        </div>
+                        <div>
+                            <b>Ограничьте сахар и фастфуд.</b>
+                            <span>Это снижает нагрузку на организм.</span>
+                        </div>
+                    </li>
+
+                    <li class="tip">
+                        <div class="icon">
+                            <svg viewBox="0 0 24 24"><path d="M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm11 3-6-6a10 10 0 1 0-2 2l6 6 2-2Z"/></svg>
+                        </div>
+                        <div>
+                            <b>Белки и полезные жиры.</b>
+                            <span>Поддержка мышц и чувства сытости.</span>
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+
+        </div>
+    </div>
+</section>
+
+<!-- HERO 2 -->
+<section class="basics-detail">
+    <div class="basics-detail-inner">
+
+        <div class="basics-text">
+            <h3>Ешьте регулярно и не переедайте.</h3>
+            <p>
+                Приём пищи 3–4 раза в день в одно и то же время помогает поддерживать
+                стабильный уровень энергии и избежать резких приступов голода.
+            </p>
+            <p>
+                Останавливайтесь, когда чувствуете насыщение на 70–80%,
+                чтобы не перегружать желудок.
+            </p>
+
+            <h4>Добавляйте больше овощей, фруктов и воды.</h4>
+            <p>
+                Овощи и фрукты содержат витамины, минералы и клетчатку,
+                необходимые для нормальной работы организма.
+            </p>
+            <p>
+                Пейте 1,5–2 литра воды в день для поддержания обмена веществ.
+            </p>
+        </div>
+
+        <div class="basics-images">
+            <div class="circle c1">
+                <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a">
+            </div>
+            <div class="circle c2">
+                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe">
+            </div>
+            <div class="circle c3">
+                <img src="https://images.unsplash.com/photo-1528712306091-ed0763094c98">
+            </div>
+            <div class="circle c4">
+                <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0">
+            </div>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>

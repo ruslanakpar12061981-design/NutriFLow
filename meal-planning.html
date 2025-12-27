@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Nutri Flow — Планирование рациона</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
+    }
+
+    body{
+      background:#0e1411;
+      color:#e6e6e6;
+    }
+
+    /* ===== TOPBAR ===== */
+    .topbar{
+      height:68px;
+      background:#1a2a22;
+      display:flex;
+      align-items:center;
+      position:sticky;
+      top:0;
+      z-index:50;
+    }
+
+    .topbar-inner{
+      width:1200px;
+      max-width:100%;
+      margin:0 auto;
+      padding:0 22px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .topbar a{
+      color:#e6e6e6;
+      text-decoration:none;
+      font-size:18px;
+      font-weight:600;
+    }
+
+    .brand{
+      font-size:26px;
+      font-weight:700;
+      color:#4fd08a;
+    }
+
+    /* ===== HERO ===== */
+    .mp-hero{
+      position:relative;
+      min-height:92vh;
+      overflow:hidden;
+      background:#0e1411;
+    }
+
+    .mp-hero::before{
+      content:"";
+      position:absolute;
+      inset:-60px;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(79,208,138,.14), transparent 58%),
+        radial-gradient(circle at 80% 70%, rgba(79,208,138,.10), transparent 60%);
+      opacity:.75;
+      pointer-events:none;
+    }
+
+    .mp-side{
+      position:absolute;
+      top:68px;
+      bottom:0;
+      width:min(36vw,520px);
+      overflow:hidden;
+      z-index:1;
+    }
+
+    .mp-side.left{ left:0; }
+    .mp-side.right{ right:0; }
+
+    .mp-side img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .mp-hero-inner{
+      width:1200px;
+      max-width:100%;
+      margin:0 auto;
+      padding:34px 22px 70px;
+      position:relative;
+      z-index:2;
+    }
+
+    .mp-panel{
+      margin:40px auto 0;
+      width:min(920px,92%);
+      background:rgba(240,231,198,.92);
+      color:#0f0f0f;
+      border-radius:26px;
+      box-shadow:0 28px 70px rgba(0,0,0,.55);
+      padding:58px;
+      transform:skewX(-10deg);
+      overflow:hidden;
+    }
+
+    .mp-panel > *{
+      transform:skewX(10deg);
+    }
+
+    .mp-title{
+      text-align:center;
+      margin-bottom:26px;
+    }
+
+    .mp-title h1{
+      font-size:clamp(44px,4.8vw,72px);
+      font-weight:900;
+      line-height:1;
+    }
+
+    .mp-title h2{
+      margin-top:8px;
+      font-size:clamp(22px,2.2vw,34px);
+      font-weight:500;
+    }
+
+    .mp-points{
+      margin-top:26px;
+      display:grid;
+      gap:18px;
+      max-width:760px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .mp-point{
+      display:grid;
+      grid-template-columns:56px 1fr;
+      gap:16px;
+      align-items:center;
+    }
+
+    .mp-ico{
+      width:54px;
+      height:54px;
+      border-radius:14px;
+      background:#0f0f0f;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .mp-ico svg{
+      width:28px;
+      height:28px;
+      fill:#fff;
+    }
+
+    .mp-point b{
+      font-size:20px;
+      line-height:1.35;
+    }
+
+    /* ===== DETAIL ===== */
+    .mp-detail{
+      position:relative;
+      padding:90px 22px;
+      background:#0e1411;
+      overflow:hidden;
+    }
+
+    .mp-detail::before{
+      content:"";
+      position:absolute;
+      inset:-60px;
+      background:
+        radial-gradient(circle at 20% 40%, rgba(79,208,138,.14), transparent 60%),
+        radial-gradient(circle at 85% 75%, rgba(79,208,138,.10), transparent 62%);
+      opacity:.7;
+      pointer-events:none;
+    }
+
+    .mp-detail-inner{
+      width:1200px;
+      max-width:100%;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:56px;
+      position:relative;
+      z-index:2;
+    }
+
+    .mp-text h3{
+      font-size:28px;
+      font-weight:900;
+      margin-bottom:14px;
+      color:#fff;
+    }
+
+    .mp-text h4{
+      margin-top:28px;
+      font-size:24px;
+      font-weight:900;
+      color:#4fd08a;
+      margin-bottom:12px;
+    }
+
+    .mp-text p{
+      font-size:18px;
+      line-height:1.75;
+      color:#cfd6d1;
+      margin-bottom:18px;
+      max-width:640px;
+    }
+
+    .mp-photo{
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 22px 55px rgba(0,0,0,.6);
+      min-height:520px;
+      background:#000;
+    }
+
+    .mp-photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* ===== ADAPTIVE ===== */
+    @media(max-width:1100px){
+      .mp-side{display:none;}
+      .mp-panel,
+      .mp-panel > *{
+        transform:none;
+      }
+    }
+
+    @media(max-width:980px){
+      .mp-detail-inner{
+        grid-template-columns:1fr;
+      }
+      .mp-photo{
+        min-height:360px;
+      }
+      .mp-panel{
+        padding:44px 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html">Главная</a>
+    <div class="brand">Nutri Flow</div>
+    <div style="width:80px"></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="mp-hero">
+
+  <div class="mp-side left">
+    <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1400&q=80" alt="">
+  </div>
+
+  <div class="mp-side right">
+    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80" alt="">
+  </div>
+
+  <div class="mp-hero-inner">
+    <div class="mp-panel">
+
+      <div class="mp-title">
+        <h1>Планирование</h1>
+        <h2>рациона</h2>
+      </div>
+
+      <div class="mp-points">
+        <div class="mp-point">
+          <div class="mp-ico"><svg viewBox="0 0 24 24"><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM7.2 6l.8 2h11.4l-2.3 5.1H9L6.6 4H2V2h3.6l1.6 4Z"/></svg></div>
+          <b>Покупайте продукты по списку, избегайте лишнего.</b>
+        </div>
+
+        <div class="mp-point">
+          <div class="mp-ico"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.55 3.84 10.74 8 11 4.16-.26 8-5.45 8-11V5l-8-3Z"/></svg></div>
+          <b>Планируйте перекусы — фрукты, орехи, йогурт.</b>
+        </div>
+
+        <div class="mp-point">
+          <div class="mp-ico"><svg viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 1 2 2v2h6v2h-2l-2.2 8.1A3 3 0 0 1 12.9 21H11a3 3 0 0 1-2.9-1.9L5.9 11H4V9h6V5a2 2 0 0 1 2-2Z"/></svg></div>
+          <b>Учитывайте баланс: белки, жиры, углеводы.</b>
+        </div>
+
+        <div class="mp-point">
+          <div class="mp-ico"><svg viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm13 8H6v10h14V10Z"/></svg></div>
+          <b>Составляйте меню на 2–3 дня вперёд.</b>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DETAIL -->
+<section class="mp-detail">
+  <div class="mp-detail-inner">
+
+    <div class="mp-text">
+      <h3>Покупайте продукты по списку, избегайте лишнего.</h3>
+      <p>
+        Перед походом в магазин составляйте список — так вы покупаете только нужное,
+        экономите деньги и избегаете лишних калорийных продуктов.
+      </p>
+
+      <h4>Планируйте перекусы — фрукты, орехи, йогурт.</h4>
+      <p>
+        Чтобы не тянуться к сладкому, заранее подготовьте полезные перекусы:
+        фрукты, орехи, йогурт, овощные палочки или сухофрукты.
+      </p>
+
+      <h4>Баланс в тарелке</h4>
+      <p>
+        Белки, овощи, сложные углеводы и полезные жиры в каждом приёме пищи
+        помогают поддерживать энергию и чувство сытости.
+      </p>
+    </div>
+
+    <!-- 🔴 НИЖНЯЯ КАРТИНКА ЗАМЕНЕНА -->
+    <div class="mp-photo">
+      <img
+        src="https://avatars.mds.yandex.net/i?id=2ef9c991fbc2f5637d851ba8be9b8c86a82e4a95-10470894-images-thumbs&n=13"
+        referrerpolicy="no-referrer"
+        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1604908176997-125f25cc500f?auto=format&fit=crop&w=1400&q=80';"
+        alt="Планирование питания"
+      >
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>
