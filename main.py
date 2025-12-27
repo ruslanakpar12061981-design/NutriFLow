@@ -6,7 +6,7 @@ from datetime import datetime
 import random
 
 
-TOKEN = "8561211677:AAG6LAdSQzdHaIcigtEKfyVWRLfmEJa-8B4"
+TOKEN = "тимофейлох"
 WEBAPP_URL = "https://admirable-centaur-9e4378.netlify.app/"
 
 bot = telebot.TeleBot(TOKEN)
